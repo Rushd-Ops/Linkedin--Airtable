@@ -2,7 +2,7 @@
 
   console.log('linkedIn scraper extension activated');
   try{
-    const rows = document.querySelectorAll('.models-table-wrapper.background-color-white');
+    const rows = document.querySelectorAll('.models-table-wrapper.background-color-white tr');
     if (!rows.length) {
         console.log('No profiles found on this page.');
         return '';
@@ -15,22 +15,27 @@
      
      let leadName = '';
      let title = '';
+     const listCells = row.querySelectorAll('td[class^="list-people-detail-header"]');
+     const nameBlock = listCells[0] ||null;
 
-     const nameBlock = row.querySelector('div');
      if (nameBlock) { //grabbing the whole nameBlock
-      const nameSpans = [...nameBlock.querySelectorAll('span')];
-      const nameDivs = [...nameBlock.querySelectorAll('div')];
+      const allSpans = [...nameBlock.querySelectorAll('span')].map(el => el.innerText.trim()).filter(Boolean);
+      const allDivs = [...nameBlock.querySelectorAll('div')].map(el => el.innerText.trim()).filter(Boolean);
+      console.log('All Divs in the row:', allDivs);
 //removing what i actually want
-      leadName = nameSpans[0]?.innerText?.trim() ||'';
-      title = nameDivs[1]?.innerText?.trim() ||'';
+      leadName = allSpans[0] || '';
+      leadName = leadName.replace(/^Select\s+/, '');
+      title = allDivs[allDivs.length - 1] || '';
 //pushing at the end of the for loop
      
      }
-     const listCells = row.querySelectorAll('td[class^="list-people-detail-header"]');
-     const company = spans[3]?.trim() ||'';
+
+     let company = listCells[1]?.innerText?.trim() ||'';
+     company = company.replace(/\n\(\+\d+\)$/, '');
 
      const location = listCells[2]?.innerText?.trim()||'';
-     const outreachActivity = listCells[4]?.innerText?.trim() ||''; 
+     let outreachActivity = listCells[4]?.innerText?.trim() ||''; 
+     outreachActivity = outreachActivity.replace(/\s*\n\s*/g, ' ');
      const dateAdded = listCells[5]?.innerText?.trim() ||'';
 
 
