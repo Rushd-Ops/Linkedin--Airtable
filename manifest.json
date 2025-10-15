@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "linkedIn Scraper",
+    "version": "1.0",
+    "description": "Scrapes linkedIn profiles for airtable pipeline demo",
+    "permissions": ["activeTab", "scripting"],
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Run Scraper"
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*.linkedin.com/*"],
+            "js": ["countries.js", "content.js"]
+        }
+    ]
+}
